@@ -101,4 +101,4 @@ class ChannelMix(nn.Module):
     @property
     def combinations(self) -> list:
         """A list of the channel weightings considered."""
-        return self.weight.reshape(-1, self.in_channels).tolist()
+        return self.weight[0].tolist()
