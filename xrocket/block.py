@@ -57,6 +57,7 @@ class DilationBlock(nn.Module):
             kernel_length: Number of paramters in each kernel, default = 9.
         """
         super().__init__()
+        self.cached_feature_specs = None
 
         # set up constituent layers
         self.conv = RocketConv(
@@ -140,20 +141,26 @@ class DilationBlock(nn.Module):
         return self.thresholds.is_fitted
 
     @property
-    def feature_names(self) -> list[tuple]:
+    def feature_specs(self) -> list[tuple]:
         """(pattern, dilation, channels, threshold) tuples to identify features."""
         assert self.is_fitted, "module needs to be fitted for thresholds to be named"
-        feature_names = [
-            (
-                str(pattern),
-                self.dilation,
-                str(channels),
-                f"{threshold:.4f}",
-            )
-            for pattern, channels, threshold in zip(
-                self.conv.patterns * self.num_combinations * self.num_thresholds,
-                self.mix.combinations * self.num_thresholds,
-                self.thresholds.thresholds,
-            )
-        ]
-        return feature_names
+        if self.cached_feature_specs is None:
+            self.cached_feature_specs = []
+            i = 0
+            for pattern in self.conv.patterns:
+                for channels in self.mix.combinations:
+                    self.cached_feature_specs.append((
+                        pattern,
+                        self.dilation,
+                        channels,
+                        self.thresholds.thresholds[i],
+                    ))
+                    i += 1
+        return self.cached_feature_specs
+    
+    def kernel_idx(self, pattern) -> int:
+        """The index of the convolutional kernel for a given pattern."""
+        for idx, conv_pattern in enumerate(self.conv.patterns):
+            if pattern == conv_pattern:
+                return idx
+        return None

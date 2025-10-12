@@ -202,3 +202,28 @@ class XRocket(nn.Module):
     def device(self) -> torch.device:
         """The device the module is loaded on."""
         return next(self.parameters()).device
+
+    @property
+    def feature_names(self) -> list[tuple]:
+        """(pattern, dilation, channels, threshold) tuples to identify features."""
+        return [(str(pattern),
+                dilation,
+                str(channels),
+                f"{threshold:.4f}",
+        ) for pattern, dilation, channels, threshold in self.feature_specs] 
+
+    @property
+    def feature_specs(self) -> list[tuple]:
+        """(pattern, dilation, channels, threshold) tuples to identify features."""
+        assert self.is_fitted, "module needs to be fitted for thresholds to be named"
+        feature_specs = []
+        for block in self.blocks:
+            feature_specs += block.feature_specs
+        return feature_specs
+
+    def dilation_block(self, dilation) -> DilationBlock:
+        """The dilation block for a given dilation."""
+        for block_dilation, block in zip(self.dilations, self.blocks):
+            if block_dilation == dilation:
+                return block
+        return None
