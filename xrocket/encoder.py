@@ -74,7 +74,8 @@ class XRocket(nn.Module):
                     f"greater than feature cap ({feature_cap})."
                 )
             )
-        num_thresholds = feature_cap // num_mix_channels
+        #num_thresholds = feature_cap // num_mix_channels
+        num_thresholds = 1
 
         # set up rocket blocks
         self.blocks = nn.ModuleList()
