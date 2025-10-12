@@ -87,6 +87,7 @@ class XRocket(nn.Module):
                     num_thresholds=num_thresholds,
                     combination_order=combination_order,
                     combination_method=combination_method,
+                    kernel_length=kernel_length,
                 )
             )
 
