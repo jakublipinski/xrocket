@@ -13,7 +13,7 @@ setup(
     author_email="info@dida.do",
     packages=find_packages(),
     install_requires=[
-        "pytorch"
+        "torch"
     ],
     python_requires=">=3.6",
 )
