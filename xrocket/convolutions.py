@@ -113,11 +113,11 @@ class RocketConv(nn.Module):
         )
         x = x.reshape(
             x.shape[0],
-            self.num_kernels,
             self.in_channels,
+            self.num_kernels,
             -1,
         )
-
+        x = x.permute(0, 2, 1, 3)
         return x
 
     @property
