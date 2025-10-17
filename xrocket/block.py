@@ -152,7 +152,7 @@ class DilationBlock(nn.Module):
                     self.cached_feature_specs.append((
                         pattern,
                         self.dilation,
-                        channels,
+                        [int(ch) for ch in channels],
                         self.thresholds.thresholds[i],
                     ))
                     i += 1
