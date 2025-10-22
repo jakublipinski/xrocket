@@ -206,11 +206,11 @@ class XRocket(nn.Module):
     @property
     def feature_names(self) -> list[tuple]:
         """(pattern, dilation, channels, threshold) tuples to identify features."""
-        return [(str(pattern),
-                dilation,
-                str(channels),
-                f"{threshold:.4f}",
-        ) for pattern, dilation, channels, threshold in self.feature_specs] 
+        return [(str(feature_spec.pattern),
+                feature_spec.dilation,
+                str(feature_spec.channels),
+                f"{feature_spec.threshold:.4f}",
+        ) for feature_spec in self.feature_specs] 
 
     @property
     def feature_specs(self) -> list[tuple]:

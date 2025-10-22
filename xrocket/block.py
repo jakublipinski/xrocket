@@ -3,6 +3,13 @@ from torch import nn
 from xrocket.convolutions import RocketConv
 from xrocket.multichannel import ChannelMix
 from xrocket.pooling import PPVThresholds
+from typing import NamedTuple
+
+class FeatureSpec(NamedTuple):
+    pattern: tuple[float]
+    dilation: int
+    channels: tuple[int]
+    threshold: float
 
 class DilationBlock(nn.Module):
     """MiniRocket block for transformation of timeseries at a single dilation value.
@@ -149,10 +156,10 @@ class DilationBlock(nn.Module):
             i = 0
             for pattern in self.conv.patterns:
                 for channels in self.mix.combinations:
-                    self.cached_feature_specs.append((
-                        pattern,
+                    self.cached_feature_specs.append(FeatureSpec(
+                        tuple(pattern),
                         self.dilation,
-                        [int(ch) for ch in channels],
+                        tuple([int(ch) for ch in channels]),
                         self.thresholds.thresholds[i],
                     ))
                     i += 1
