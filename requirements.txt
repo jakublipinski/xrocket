@@ -85,7 +85,7 @@ scipy==1.11.2
     #   scikit-learn
 six==1.16.0
     # via python-dateutil
-sympy==1.12
+sympy>=1.12
     # via torch
 threadpoolctl==3.2.0
     # via scikit-learn
